@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title> when() test </title>
+<script type="text/javascript" src="async.js"></script>
+</head>
+<body>
+
+<script type="text/javascript">	
+window.onload = function(){
+
+	//Async file request
+	when({
+		load: [
+			"http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"
+		],
+		test: function(){
+			return !!window.$;
+		},
+		ready: function(){
+			console.log( 'jQuery loaded' ); 
+		},
+		quit: function(){
+			console.log( 'Error - jQuery not loaded' ); 
+		},
+		testInterval: 250,
+		maxSecs: 20 //Seconds until quit
+	});
+
+	/*
+	Mock async conditions - comment out to fail
+	*/
+	window.conditionA = 1;
+	setTimeout(function(){window.conditionB=1},700);
+	setTimeout(function(){window.conditionC=1},1700);
+	setTimeout(function(){window.conditionD=1},3700);
+
+	when({
+		test: function(){
+			return window.conditionA
+		},
+		ready: function(){
+			console.log( "conditionA SUCCESS" ); 
+		},
+		quit: function(){
+			console.log( "conditionA FAIL" ); 
+		},
+		testInterval: 250,
+		maxSecs: 0.1
+	});
+
+	when({
+		test: function(){
+			return window.conditionB
+		},
+		ready: function(){
+			console.log( "conditionB SUCCESS" ); 
+		},
+		quit: function(){
+			console.log( "conditionB FAIL" ); 
+		},
+		testInterval: 250,
+		maxSecs: 2
+	});
+
+	when({
+		test: function(){
+			return window.conditionC
+		},
+		ready: function(){
+			console.log( "conditionC SUCCESS" ); 
+		},
+		quit: function(){
+			console.log( "conditionC FAIL" ); 
+		},
+		testInterval: 250,
+		maxSecs: 4
+	});
+
+	when({
+		test: function(){
+			return window.conditionD
+		},
+		ready: function(){
+			console.log( "conditionD SUCCESS" ); 
+		},
+		quit: function(){
+			console.log( "conditionD FAIL" ); 
+		},
+		testInterval: 250,
+		maxSecs: 6
+	});
+
+}
+</script>
+
+</body>
+</html>
