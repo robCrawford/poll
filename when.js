@@ -1,28 +1,29 @@
 /*
 Set callback to run when test function evaluates as truthy. 
 Optional JS/CSS file loading.
+NOTE: If loading only JS files then an onload event solution is preferable to polling
 
 EXAMPLE:
-	var loadJQuery = when({
+	var cssRequest = when({
 		load: [
-			"http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"
+			"http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery-ui.css"
 		],
 		test: function(){
-			return !!window.$;
+			return overlayDiv.offsetWidth === 1; //Width set in CSS
 		},
 		ready: function(){
-			console.log( 'Loaded' ); 
+			console.log( 'CSS loaded' );
 		},
 		quit: function(){
-			console.log( 'Error' ); 
+			console.log( 'Error - CSS did not load' ); 
 		},
 		testInterval: 100, //How often to test in ms
 		maxSecs: 20 //Seconds until quit
 	});
 
 METHODS ON RETURNED OBJECT:
-	loadJQuery.quit(); //Manually quit
-	loadJQuery.ready(); //Manually set to ready
+	cssRequest.quit(); //Manually quit
+	cssRequest.ready(); //Manually set to ready
 */
 (function(window, document, undefined){
 
