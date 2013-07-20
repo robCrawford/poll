@@ -1,7 +1,11 @@
 /*
-Set callback to run when test function evaluates as truthy. 
-Optional JS/CSS file loading.
-NOTE: If loading only JS files then an onload event solution is preferable to polling
+https://github.com/robCrawford/when
+Copyright 2012 Rob Crawford
+Released under the MIT license
+http://www.opensource.org/licenses/mit-license.php
+
+Polling solution for async conditions, supports requests for JS and CSS files.  
+*NOTE: If loading only JS files then an onload event solution is preferable to polling.*  
 
 EXAMPLE:
 	var cssRequest = when({
