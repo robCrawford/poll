@@ -3,7 +3,7 @@ Set callback to run when test function evaluates as truthy.
 Optional JS/CSS file loading.
 
 EXAMPLE:
-	when({
+	var loadJQuery = when({
 		load: [
 			"http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"
 		],
@@ -19,6 +19,10 @@ EXAMPLE:
 		testInterval: 100, //How often to test in ms
 		maxSecs: 20 //Seconds until quit
 	});
+
+METHODS ON RETURNED OBJECT:
+	loadJQuery.quit(); //Manually quit
+	loadJQuery.ready(); //Manually set to ready
 */
 (function(window, document, undefined){
 
@@ -32,10 +36,12 @@ EXAMPLE:
 	namespace.when = function(params){
 		var testFn = params.test,
 			readyFn = params.ready,
-			loadArr = params.load;
+			quitFn = params.quit,
+			loadArr = params.load,
+			timer;
 
 		if(loadArr){
-		//Request loadArr paths, if not requested already
+		//If files requested load paths (if not requested already)
 		//Type determined by ".js" or ".css" in path
 			for(var i=0,len=loadArr.length;i<len;i++){
 				var url = loadArr[i];
@@ -49,45 +55,66 @@ EXAMPLE:
 		}
 
 		if(readyFn){
-			//If testFn is already true readyFn will run immediately - no timer will be created
-			var quitFn = params.quit,
-				testInterval = params.testInterval || 250,
+		//If test provided start running periodically
+		//(If returns true immediately, no timers are created)
+			var testInterval = params.testInterval || 250,
 				maxSecs = params.maxSecs || 30,
 				dur = 0;
 
 			function conditionTest(){
 				if(testFn()){ //If testFn evaluates
-					readyFn.call();
+					resolve(true);
 				}
 				else if(dur/1000<maxSecs){ //Else wait
-					setTimeout(conditionTest, testInterval);
+					timer = setTimeout(conditionTest, testInterval);
 					dur += testInterval;
 					//console.log("trying...", dur); //Debug
 				}
 				else{ //Quit trying after maxSecs
-					if(quitFn)quitFn.call();
-					conditionTest = null;
+					resolve(false);
 				}
 			}
 			conditionTest();
 		}
 
-		function loadJs(url){
-		//Inject script include into HEAD
-			var scriptEl = document.createElement('script');
-			scriptEl.type = 'text/javascript';
-			scriptEl.src = url;
-			headEl.appendChild(scriptEl);
+		function resolve(success){
+		//Resolve/clean up
+			if(timer)clearTimeout(timer);
+
+			if(success)readyFn.call();
+			else if(quitFn)quitFn.call();
+
+			timer = conditionTest = readyFn = quitFn = null;
 		}
 
-		function loadCss(url){
-		//Inject CSS include into HEAD
-			var cssNode = document.createElement('link');
-			cssNode.type = 'text/css';
-			cssNode.rel = 'stylesheet';
-			cssNode.href = url;
-			headEl.appendChild(cssNode);
+		//Return object API
+		return {
+			quit: function(){ //Manually quit
+				resolve(false);
+			},
+			ready: function(){ //Manually set to ready
+				resolve(true);
+			}
 		}
+
+	}
+
+	/* UTILS */
+	function loadJs(url){
+	//Inject script include into HEAD
+		var scriptEl = document.createElement('script');
+		scriptEl.type = 'text/javascript';
+		scriptEl.src = url;
+		headEl.appendChild(scriptEl);
+	}
+
+	function loadCss(url){
+	//Inject CSS include into HEAD
+		var cssNode = document.createElement('link');
+		cssNode.type = 'text/css';
+		cssNode.rel = 'stylesheet';
+		cssNode.href = url;
+		headEl.appendChild(cssNode);
 	}
 
 })(window, document);

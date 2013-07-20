@@ -3,23 +3,23 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title> when() test </title>
-<script type="text/javascript" src="async.js"></script>
+<script type="text/javascript" src="when.js"></script>
 </head>
 <body>
 
 <script type="text/javascript">	
 window.onload = function(){
 
-	//Async file request
+	//Async file request for jQuery
 	when({
 		load: [
 			"http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"
 		],
 		test: function(){
-			return !!window.$;
+			return !!window.jQuery;
 		},
 		ready: function(){
-			console.log( 'jQuery loaded' ); 
+			console.log( 'jQuery loaded' );
 		},
 		quit: function(){
 			console.log( 'Error - jQuery not loaded' ); 
@@ -29,14 +29,20 @@ window.onload = function(){
 	});
 
 	/*
-	Mock async conditions - comment out to fail
+	  Mock async conditions - comment out to fail
 	*/
-	window.conditionA = 1;
-	setTimeout(function(){window.conditionB=1},700);
-	setTimeout(function(){window.conditionC=1},1700);
-	setTimeout(function(){window.conditionD=1},3700);
+	window.conditionA = 1; //Satisfy testA condition immediately
+	setTimeout(function(){window.conditionB=1},700); //Satisfy testB condition after delay
+	setTimeout(function(){window.conditionC=1},1700); //Satisfy testC condition after delay
 
-	when({
+	//setTimeout(function(){testD.ready()},2000); //Manually call ready() on testD early
+	//setTimeout(function(){testD.quit()},3000); //Manually quit testD early
+	setTimeout(function(){window.conditionD=1},3700); //Satisfy testD condition after delay
+
+	/*
+ 	  Create tests
+	*/
+	var testA = when({
 		test: function(){
 			return window.conditionA
 		},
@@ -50,7 +56,7 @@ window.onload = function(){
 		maxSecs: 0.1
 	});
 
-	when({
+	var testB = when({
 		test: function(){
 			return window.conditionB
 		},
@@ -64,7 +70,7 @@ window.onload = function(){
 		maxSecs: 2
 	});
 
-	when({
+	var testC = when({
 		test: function(){
 			return window.conditionC
 		},
@@ -78,7 +84,7 @@ window.onload = function(){
 		maxSecs: 4
 	});
 
-	when({
+	var testD = when({
 		test: function(){
 			return window.conditionD
 		},
