@@ -2,23 +2,32 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title> when() test </title>
-<script type="text/javascript" src="when.js"></script>
+<title> poll() test </title>
+<script type="text/javascript" src="poll.js"></script>
 </head>
 <body>
 
-<script type="text/javascript">	
-window.onload = function(){
+<script type="text/javascript">
 
-	//Create test element for CSS file
+(function(window, document, undefined){
+
+
+/* TEST ASYNC CSS FILE */
+
+	//Create test element for CSS
 	var overlayDiv = document.createElement("div");
 	overlayDiv.className = "ui-helper-hidden-accessible";
 	document.body.appendChild(overlayDiv);
 
-	var cssRequest = when({
-		load: [
-			"http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery-ui.css"
-		],
+	//Request CSS
+	var cssNode = document.createElement('link');
+	cssNode.type = 'text/css';
+	cssNode.rel = 'stylesheet';
+	cssNode.href = "http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery-ui.css";
+	document.getElementsByTagName('head')[0].appendChild(cssNode);
+
+	//Start polling for CSS result
+	var cssTest = poll({
 		test: function(){
 			return overlayDiv.offsetWidth === 1; //Width set in CSS
 		},
@@ -28,25 +37,14 @@ window.onload = function(){
 		quit: function(){
 			console.log( 'Error - CSS did not load' ); 
 		},
-		testInterval: 100, //How often to test in ms
-		maxSecs: 20 //Seconds until quit
+		frequency: 100, //How often to poll in ms (default: 250)
+		timeout: 10000 //ms until quit (default: 30000)
 	});
 
-	/*
-	  Mock generic async conditions - comment out to fail
-	*/
-	window.conditionA = 1; //Satisfy testA condition immediately
-	setTimeout(function(){window.conditionB=1},700); //Satisfy testB condition after delay
-	setTimeout(function(){window.conditionC=1},1700); //Satisfy testC condition after delay
 
-	//setTimeout(function(){testD.ready()},2000); //Manually call ready() on testD early
-	//setTimeout(function(){testD.quit()},3000); //Manually quit testD early
-	setTimeout(function(){window.conditionD=1},3700); //Satisfy testD condition after delay
+/* TEST GENERIC ASYNC CONDITIONS */
 
-	/*
- 	  Create tests
-	*/
-	var testA = when({
+	var testA = poll({
 		test: function(){
 			return window.conditionA
 		},
@@ -56,11 +54,10 @@ window.onload = function(){
 		quit: function(){
 			console.log( "conditionA FAIL" ); 
 		},
-		testInterval: 250,
-		maxSecs: 0.1
+		timeout: 100
 	});
 
-	var testB = when({
+	var testB = poll({
 		test: function(){
 			return window.conditionB
 		},
@@ -70,11 +67,10 @@ window.onload = function(){
 		quit: function(){
 			console.log( "conditionB FAIL" ); 
 		},
-		testInterval: 250,
-		maxSecs: 2
+		timeout: 1000
 	});
 
-	var testC = when({
+	var testC = poll({
 		test: function(){
 			return window.conditionC
 		},
@@ -84,25 +80,22 @@ window.onload = function(){
 		quit: function(){
 			console.log( "conditionC FAIL" ); 
 		},
-		testInterval: 250,
-		maxSecs: 4
+		timeout: 2000
 	});
 
-	var testD = when({
-		test: function(){
-			return window.conditionD
-		},
-		ready: function(){
-			console.log( "conditionD SUCCESS" ); 
-		},
-		quit: function(){
-			console.log( "conditionD FAIL" ); 
-		},
-		testInterval: 250,
-		maxSecs: 6
-	});
+	/*
+ 	  Mock conditions - comment out to fail
+	*/
+	window.conditionA = 1; //Satisfy testA condition immediately
+	setTimeout(function(){window.conditionB = 1}, 500); //Satisfy testB condition after delay
 
-}
+	//setTimeout(function(){testC.ready()}, 500); //Manually call ready() on testC early
+	//setTimeout(function(){testC.quit()}, 500); //Manually quit testC early
+	setTimeout(function(){window.conditionC = 1}, 1000); //Satisfy testC condition after delay
+
+
+})(window, document);
+
 </script>
 
 </body>
