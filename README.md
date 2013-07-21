@@ -3,7 +3,9 @@ poll.js
 
 *(No dependencies, <0.4kB)*  
 
-Polling for async conditions  
+Set up a test function to run periodically until timeout duration, with ready and quit actions.  
+This is useful for async conditions like loading a CSS file, when no callback is available.  
+
 
 ```javascript
 
