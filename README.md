@@ -27,3 +27,6 @@ This is useful for async conditions like loading a CSS file, when no callback is
 	cssTest.ready(); //Manually set to ready
 
 ```
+
+
+*NOTE:* The namespace to attach .poll() to can easily be changed by supplying a second argument into the wrapping iife.

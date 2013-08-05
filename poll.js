@@ -1,9 +1,10 @@
+/**
+ * @preserve Copyright 2013 Rob Crawford
+ * https://github.com/robCrawford/poll
+ * Released under the MIT license
+ * http://www.opensource.org/licenses/mit-license.php
+ */
 /*
-https://github.com/robCrawford/poll
-Copyright 2013 Rob Crawford
-Released under the MIT license
-http://www.opensource.org/licenses/mit-license.php
-
 Polling for async conditions
 
 EXAMPLE:
@@ -24,13 +25,13 @@ EXAMPLE:
 METHODS ON RETURNED OBJECT:
 	cssTest.quit(); //Manually quit
 	cssTest.ready(); //Manually set to ready
+
+NOTE:
+	The namespace to attach .poll() to can easily be changed by supplying a second argument into the wrapping iife
 */
-(function(window, document, undefined){
+(function(window, namespace){ //Optionally supply namespace to attach .poll()
 
-	var namespace = window; //Set namespace to attach .poll()
-
-
-	namespace.poll = function(params){
+	(namespace || window).poll = function(params){
 	//If test fn returns true immediately, no timers are created
 		var testFn = params.test,
 			readyFn = params.ready,
@@ -77,4 +78,4 @@ METHODS ON RETURNED OBJECT:
 
 	}
 
-})(window, document);
+})(window);
