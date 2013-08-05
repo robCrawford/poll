@@ -1,7 +1,7 @@
 poll.js
 =======
 
-*(No dependencies, <0.4kB)*  
+*(No dependencies, 0.4kB)*  
 
 Set up a test function to run periodically until timeout duration, with ready and quit actions.  
 This is useful for async conditions like loading a CSS file, when no callback is available.  
@@ -29,4 +29,5 @@ This is useful for async conditions like loading a CSS file, when no callback is
 ```
 
 
-*NOTE:* The namespace to attach .poll() to can easily be changed by supplying a second argument into the wrapping iife.
+*NOTE:*  
+The namespace to attach .poll() to can easily be changed by supplying a second argument into the wrapping iife.
