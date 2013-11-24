@@ -11,10 +11,11 @@
 
 (function(window, document, undefined){
 
-
-/* TEST ASYNC CSS FILE */
-
-	//Create test element for CSS
+/* 
+  CSS EXAMPLE
+  Poll for element width set by file
+*/
+	//Create hidden test element
 	var overlayDiv = document.createElement("div");
 	overlayDiv.className = "ui-helper-hidden-accessible";
 	document.body.appendChild(overlayDiv);
@@ -41,9 +42,10 @@
 		timeout: 10000 //ms until quit (default: 30000)
 	});
 
-
-/* TEST GENERIC ASYNC CONDITIONS */
-
+/* 
+  GENERIC EXAMPLES
+  With mock conditions
+*/
 	var testA = poll({
 		test: function(){
 			return window.conditionA
@@ -81,19 +83,70 @@
 			console.log( "conditionC FAIL" ); 
 		},
 		intervals: [
-			250, 500, 1000, 2000, 4000
+			250, 500, 1000, 1500, 3000
 		]
 	});
 
 	/*
- 	  Mock conditions - comment out to fail
+ 	  Mock conditions
 	*/
 	window.conditionA = 1; //Satisfy testA condition immediately
 	setTimeout(function(){window.conditionB = 1}, 500); //Satisfy testB condition after delay
 
-	//setTimeout(function(){testC.ready()}, 500); //Manually call ready() on testC early
-	//setTimeout(function(){testC.quit()}, 500); //Manually quit testC early
-	setTimeout(function(){window.conditionC = 1}, 1000); //Satisfy testC condition after delay
+	//setTimeout(function(){testC.ready()}, 50); //Manually call ready() on testC early
+	//setTimeout(function(){testC.quit()}, 50); //Manually quit testC early
+	setTimeout(function(){window.conditionC = 1}, 700); //Satisfy testC condition after delay
+
+/*
+  CROSS SCOPE EXAMPLE
+  Quit from within testFn definition using methods attached to testFn
+*/
+	var ns = {};
+
+	ns.scope1 = (function(){
+	//Where test function is defined
+
+		var testFn = function(){
+				if(window.failD){
+				//Something negative occurs that means polling is no longer necessary
+					testFn.quit();
+				}
+				else if(window.succeedD){
+				//Something positive occurs that means polling is no longer necessary
+					testFn.ready();
+				}
+				else{
+				//Condition that polling is waiting for
+					return window.conditionD;
+				}
+			}
+
+		return {
+			testFn: testFn
+		}
+	})();
+
+	ns.scope2 = (function(){
+	//Where polling is initialised
+
+		var testD = poll({
+			test: ns.scope1.testFn,
+			ready: function(){
+				console.log( "conditionD SUCCESS" ); 
+			},
+			quit: function(){
+				console.log( "conditionD FAIL" ); 
+			}
+		});
+		
+	})();
+
+	/*
+ 	  Mock conditions
+	*/
+	//window.failD = 1; //Event that causes early fail
+	//window.succeedD = 1; //Event that causes early success
+	setTimeout(function(){window.conditionD = 1}, 1500); //Satisfy testD condition after delay
 
 
 })(window, document);

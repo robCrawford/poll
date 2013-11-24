@@ -1,14 +1,26 @@
 poll.js
 =======
 
-*(No dependencies, 0.5kB minified)*  
+*(No dependencies, 0.4kB minified)*  
 
-Run a `test()` function at intervals until `ready()` or `quit()`.  
-State of returned object can also be set manually i.e. `cssTest.quit()`.  
+Runs `test` function at specified intervals.  
+If `test` function returns true then `ready` is called and polling quits. If `timeout` is reached then `quit` is called instead.   
+The state can be set manually at any time via the returned object i.e. `cssTest.ready()` or `cssTest.quit()`.  
+The function supplied to the param `test` is also given the methods `.ready()` and `.quit()`, useful if it needs to manage state internally and is not within scope of the returned object.  
 Test frequency can be uniform or a set of durations, see examples below.  
 
 
 ```javascript
+
+//MINIMUM REQUIRED
+	poll({
+		test: function(){
+			return overlayDiv.offsetWidth === 1; //Width set in CSS
+		},
+		ready: function(){
+			console.log( 'CSS loaded' );
+		}
+	});
 
 //EXAMPLE 1 - frequency and timeout specified:
 	var cssTest = poll({
@@ -46,8 +58,12 @@ Test frequency can be uniform or a set of durations, see examples below.
 	cssTest.quit(); //Manually quit
 	cssTest.ready(); //Manually set to ready
 
+//METHODS ADDED TO TEST FUNCTION:
+	testFn.quit(); //Manually quit from test function ref
+	testFn.ready(); //Manually set to ready from test function ref
+
 ```
 
-
 *NOTE:*  
-The namespace to attach .poll() to can easily be changed by supplying a second argument into the wrapping iife.
+The namespace where `.poll()` is attached should be supplied as the second argument of the wrapping iife (the final parentheses at the end of the file).   
+If no namespace is provided then `.poll()` will be added to `window`.
