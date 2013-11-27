@@ -4,15 +4,24 @@
  * Released under the MIT license
  * http://www.opensource.org/licenses/mit-license.php
  */
-/*
-  Polling for async conditions
-  NOTE:
-	The namespace where `.poll()` is attached should be supplied as the second argument of the wrapping iife.
-	If no namespace is provided then `.poll()` will be added to `window`.
-*/
 (function(window, namespace){
+//The namespace where `.poll()` is attached should be supplied as the second argument.
+//If no namespace is provided then `.poll()` will be added to `window`.
 
-	(namespace || window).poll = function(params){
+	var allTimers = {};
+	(namespace || window).poll = poll;
+
+	poll.kill = function(){
+	//Quit all existing timers
+		for(var p in allTimers)clearTimer(p);
+	}
+
+	function clearTimer(id){
+		clearTimeout(id);
+		delete allTimers[id];
+	}
+
+	function poll(params){
 	//If test fn returns true immediately, no timers are created
 		var testFn = params.test,
 			readyFn = params.ready,
@@ -23,8 +32,7 @@
 			timeout = params.timeout || 30000,
 			dur = 0,
 			isResolved,
-			timer;
-
+			currTimer;
 
 		if(intervals){
 		//If intervals supplied, overwrite timeout with total time
@@ -34,6 +42,7 @@
 		}
 
 		function conditionTest(){
+			clearTimer(currTimer); //To remove allTimers entry
 			if(testFn()){ //If testFn evaluates
 				resolveReady();
 			}
@@ -42,7 +51,8 @@
 			}
 			else if(dur<timeout){ //Else wait
 				if(intervals)frequency = intervals[intervalsIndex++]; //If intervals supplied
-				timer = setTimeout(conditionTest, frequency);
+				currTimer = setTimeout(conditionTest, frequency);
+				allTimers[currTimer] = 0; //Only need currTimer ID
 				dur += frequency;
 				//console.log("trying...", dur); //Debug
 			}
@@ -54,12 +64,12 @@
 		function resolve(success){
 		//Resolve/clean up
 			isResolved = true;
-			if(timer)clearTimeout(timer);
+			clearTimer(currTimer);
 
 			if(success)readyFn && readyFn.call();
 			else quitFn && quitFn.call();
 
-			readyFn = quitFn = timer = null; //i.e. calling quit() or ready() once resolved has no effect
+			readyFn = quitFn = currTimer = null; //i.e. calling quit() or ready() once resolved has no effect
 		}
 
 		function resolveQuit(){

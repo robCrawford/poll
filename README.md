@@ -1,7 +1,7 @@
 poll.js
 =======
 
-*(No dependencies, 0.4kB minified)*  
+*(No dependencies, 0.5kB minified)*  
 
 Runs `test` function at specified intervals.  
 If `test` function returns true then `ready` is called and polling quits. If `timeout` is reached then `quit` is called instead.   
@@ -61,6 +61,9 @@ Test frequency can be uniform or a set of durations, see examples below.
 //METHODS ADDED TO TEST FUNCTION:
 	testFn.quit(); //Manually quit from test function ref
 	testFn.ready(); //Manually set to ready from test function ref
+
+//METHODS ON poll()
+	poll.kill(); //Kill all existing timers
 
 ```
 

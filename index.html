@@ -7,6 +7,8 @@
 </head>
 <body>
 
+Test output sent to console.
+
 <script type="text/javascript">
 
 (function(window, document, undefined){
@@ -148,6 +150,34 @@
 	//window.succeedD = 1; //Event that causes early success
 	setTimeout(function(){window.conditionD = 1}, 1500); //Satisfy testD condition after delay
 
+
+/*
+  Test poll.kill()
+
+	setTimeout(function(){
+		console.log( "Kill all" );
+		poll.kill(); //Kill all existing
+
+		//Start another process then kill it
+		poll({
+			test: function(){
+				console.log( "New process1" );
+				return false;
+			}
+		});
+		poll({
+			test: function(){
+				console.log( "New process2" );
+				return false;
+			}
+		});
+		setTimeout(function(){
+			console.log( "Kill all" );
+			poll.kill(); //Kill all existing
+		}, 1000);
+
+	}, 400);
+*/
 
 })(window, document);
 
