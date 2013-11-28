@@ -61,7 +61,7 @@
 				//console.log("trying...", dur); //Debug
 			}
 			else{ //Quit trying after timeout duration
-				resolveQuit();
+				resolve();
 			}
 		}
 
@@ -76,16 +76,12 @@
 			readyFn = quitFn = currTimer = null; //i.e. calling quit() or ready() once resolved has no effect
 		}
 
-		function resolveQuit(){
-			resolve();
-		}
-
 		function resolveReady(){
 			resolve(true);
 		}
 
 		//Set API on testFn
-		testFn.quit = resolveQuit;
+		testFn.quit = resolve;
 		testFn.ready = resolveReady;
 
 		//Run first test
@@ -93,7 +89,7 @@
 
 		//Set API on return object
 		return {
-			quit: resolveQuit, //Manually quit
+			quit: resolve, //Manually quit
 			ready: resolveReady //Manually set to ready
 		}
 
