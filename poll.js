@@ -8,12 +8,15 @@
 //The namespace where `.poll()` is attached should be supplied as the second argument.
 //If no namespace is provided then `.poll()` will be added to `window`.
 
-	var allTimers = {};
+	var allTimers = {},
+		isDisabled;
 	(namespace || window).poll = poll;
 
-	poll.kill = function(){
+	poll.kill = function(isPermanent){
 	//Quit all existing timers
+	//Optionally also disable poll() completely
 		for(var p in allTimers)clearTimer(p);
+		isDisabled = isPermanent;
 	}
 
 	function clearTimer(id){
@@ -23,6 +26,7 @@
 
 	function poll(params){
 	//If test fn returns true immediately, no timers are created
+		if(isDisabled)return;
 		var testFn = params.test,
 			readyFn = params.ready,
 			quitFn = params.quit,

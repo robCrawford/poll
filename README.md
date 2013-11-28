@@ -4,9 +4,11 @@ poll.js
 *(No dependencies, 0.5kB minified)*  
 
 Runs `test` function at specified intervals.  
-If `test` function returns true then `ready` is called and polling quits. If `timeout` is reached then `quit` is called instead.   
+If `test` function returns `true` then `ready` is called and polling quits. If `timeout` is reached then `quit` is called instead.   
+
 The state can be set manually at any time via the returned object i.e. `cssTest.ready()` or `cssTest.quit()`.  
-The function supplied to the param `test` is also given the methods `.ready()` and `.quit()`, useful if it needs to manage state internally and is not within scope of the returned object.  
+The function supplied to the param `test` is also given the methods `.ready()` and `.quit()`, useful if it needs to manage state and is not within scope of the returned object.  
+
 Test frequency can be uniform or a set of durations, see examples below.  
 
 
@@ -64,6 +66,7 @@ Test frequency can be uniform or a set of durations, see examples below.
 
 //METHODS ON poll()
 	poll.kill(); //Kill all existing timers
+	poll.kill(true); //Kill and completely disable poll()
 
 ```
 
