@@ -25,7 +25,6 @@
 	}
 
 	function poll(params){
-	//If test fn returns true immediately, no timers are created
 		if(isDisabled)return;
 		var testFn = params.test,
 			readyFn = params.ready,
@@ -85,7 +84,8 @@
 		testFn.ready = resolveReady;
 
 		//Run first test
-		conditionTest();
+		//Timer ensures that returned object exists within callback
+		setTimeout(conditionTest, 0);
 
 		//Set API on return object
 		return {
