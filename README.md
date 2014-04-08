@@ -55,6 +55,26 @@ Test frequency can be uniform or a set of durations, see examples below.
 		]
 	});
 
+//EXAMPLE 3 - quit from within test function:
+	(function(){
+		util.cssTest = function(){
+			if(!overlayDiv)util.cssTest.quit();
+			else return overlayDiv.offsetWidth === 1;
+		};
+	})();
+
+	(function(){
+		poll({
+			test: util.cssTest,
+			ready: function(){
+				console.log( 'CSS loaded' );
+			},
+			quit: function(){
+				console.log( 'CSS error' ); 
+			}
+		});
+	})();
+
 
 //METHODS ON RETURNED OBJECT:
 	cssTest.quit(); //Manually quit
@@ -67,6 +87,10 @@ Test frequency can be uniform or a set of durations, see examples below.
 //METHODS ON poll()
 	poll.kill(); //Kill all existing timers
 	poll.kill(true); //Kill and completely disable poll()
+
+//OVERRIDING DEFAULTS
+	poll.timeout = 1000; //Override default timeout
+	poll.frequency = 100; //Override default frequency
 
 ```
 

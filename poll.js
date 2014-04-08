@@ -7,22 +7,13 @@
 (function(window, namespace){
 //The namespace where `.poll()` is attached should be supplied as the second argument.
 //If no namespace is provided then `.poll()` will be added to `window`.
-
 	var allTimers = {},
 		isDisabled;
-	(namespace || window).poll = poll;
 
-	poll.kill = function(isPermanent){
-	//Quit all existing timers
-	//Optionally also disable poll() completely
-		for(var p in allTimers)clearTimer(p);
-		isDisabled = isPermanent;
-	}
+	//Defaults - can be overridden from global ref i.e. `poll.timeout = 1000`
+	poll.frequency = 250;
+	poll.timeout = 30000;
 
-	function clearTimer(id){
-		clearTimeout(id);
-		delete allTimers[id];
-	}
 
 	function poll(params){
 		if(isDisabled)return;
@@ -31,8 +22,8 @@
 			quitFn = params.quit,
 			intervals = params.intervals,
 			intervalsIndex = 0,
-			frequency = params.frequency || 250,
-			timeout = params.timeout || 30000,
+			frequency = params.frequency || poll.frequency,
+			timeout = params.timeout || poll.timeout,
 			dur = 0,
 			isResolved,
 			currTimer;
@@ -94,5 +85,20 @@
 		}
 
 	}
+
+	poll.kill = function(isPermanent){
+	//Quit all existing timers
+	//Optionally also disable poll() completely
+		for(var p in allTimers)clearTimer(p);
+		isDisabled = isPermanent;
+	}
+
+	function clearTimer(id){
+		clearTimeout(id);
+		delete allTimers[id];
+	}
+
+	//Add to namespace
+	(namespace || window).poll = poll;
 
 })(window);
