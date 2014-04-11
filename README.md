@@ -20,7 +20,7 @@ Test frequency can be uniform or a set of durations, see examples below.
 //MINIMUM REQUIRED
 	poll({
 		test: function(){
-			return overlayDiv.offsetWidth === 1;
+			return testDiv.offsetWidth === 10;
 		},
 		ready: function(){
 			console.log( 'CSS loaded' );
@@ -30,7 +30,7 @@ Test frequency can be uniform or a set of durations, see examples below.
 //EXAMPLE 1 - frequency and timeout specified:
 	var cssTest = poll({
 		test: function(){
-			return overlayDiv.offsetWidth === 1;
+			return testDiv.offsetWidth === 10;
 		},
 		ready: function(){
 			console.log( 'CSS loaded' );
@@ -45,7 +45,7 @@ Test frequency can be uniform or a set of durations, see examples below.
 //EXAMPLE 2 - staggered durations supplied:
 	var cssTest = poll({
 		test: function(){
-			return overlayDiv.offsetWidth === 1;
+			return testDiv.offsetWidth === 10;
 		},
 		ready: function(){
 			console.log( 'CSS loaded' );
@@ -61,8 +61,8 @@ Test frequency can be uniform or a set of durations, see examples below.
 //EXAMPLE 3 - quit from within test function:
 	(function(){
 		util.cssTest = function(){
-			if(!overlayDiv)util.cssTest.quit();
-			else return overlayDiv.offsetWidth === 1;
+			if(!testDiv)util.cssTest.quit();
+			else return testDiv.offsetWidth === 10;
 		};
 	})();
 
