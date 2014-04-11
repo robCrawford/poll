@@ -1,1 +1,2 @@
-/minify.bat
+.DS_Store
+node_modules

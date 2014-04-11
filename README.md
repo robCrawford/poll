@@ -1,13 +1,16 @@
 poll.js
 =======
 
-*(No dependencies, 0.5kB minified)*  
+*(No dependencies, 0.6kB minified)*  
 
 Runs `test` function at specified intervals.  
-If `test` function returns `true` then `ready` is called and polling quits. If `timeout` is reached then `quit` is called instead.   
+If `test` returns a truthy value then `ready` is called and polling quits.  
+If `timeout` is reached then `quit` is called instead.  
 
 The state can be set manually at any time via the returned object i.e. `cssTest.ready()` or `cssTest.quit()`.  
-The function supplied to the param `test` is also given the methods `.ready()` and `.quit()`, useful if it needs to manage state and is not within scope of the returned object.  
+
+The function object supplied to the param `test` also has the methods `.ready()` and `.quit()` attached.  
+This is useful for stopping polling from within that function, i.e. when defined in a different scope.  
 
 Test frequency can be uniform or a set of durations, see examples below.  
 
@@ -17,7 +20,7 @@ Test frequency can be uniform or a set of durations, see examples below.
 //MINIMUM REQUIRED
 	poll({
 		test: function(){
-			return overlayDiv.offsetWidth === 1; //Width set in CSS
+			return overlayDiv.offsetWidth === 1;
 		},
 		ready: function(){
 			console.log( 'CSS loaded' );
@@ -27,7 +30,7 @@ Test frequency can be uniform or a set of durations, see examples below.
 //EXAMPLE 1 - frequency and timeout specified:
 	var cssTest = poll({
 		test: function(){
-			return overlayDiv.offsetWidth === 1; //Width set in CSS
+			return overlayDiv.offsetWidth === 1;
 		},
 		ready: function(){
 			console.log( 'CSS loaded' );
@@ -42,7 +45,7 @@ Test frequency can be uniform or a set of durations, see examples below.
 //EXAMPLE 2 - staggered durations supplied:
 	var cssTest = poll({
 		test: function(){
-			return overlayDiv.offsetWidth === 1; //Width set in CSS
+			return overlayDiv.offsetWidth === 1;
 		},
 		ready: function(){
 			console.log( 'CSS loaded' );
@@ -95,5 +98,5 @@ Test frequency can be uniform or a set of durations, see examples below.
 ```
 
 *NOTE:*  
-The namespace where `.poll()` is attached should be supplied as the second argument of the wrapping iife (the final parentheses at the end of the file).   
+If an object is supplied as the second argument to the wrapping iife then `.poll()` will be attached to that namespace.  
 If no namespace is provided then `.poll()` will be added to `window`.

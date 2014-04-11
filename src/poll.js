@@ -1,14 +1,12 @@
-/**
- * Copyright 2013 Rob Crawford
- * https://github.com/robCrawford/poll
- * Released under the MIT license
- * http://www.opensource.org/licenses/mit-license.php
- */
 (function(window, namespace){
-//The namespace where `.poll()` is attached should be supplied as the second argument.
+//If an object is supplied as the second argument to the wrapping iife then `.poll()` will be attached to that namespace.  
 //If no namespace is provided then `.poll()` will be added to `window`.
+	"use strict";
 	var allTimers = {},
 		isDisabled;
+
+	//Add to namespace
+	(namespace || window).poll = poll;
 
 	//Defaults - can be overridden from global ref i.e. `poll.timeout = 1000`
 	poll.frequency = 250;
@@ -98,9 +96,6 @@
 		clearTimeout(id);
 		delete allTimers[id];
 	}
-
-	//Add to namespace
-	(namespace || window).poll = poll;
 
 
 })(window);
