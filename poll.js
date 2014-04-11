@@ -46,7 +46,7 @@
 			else if(dur<timeout){ //Else wait
 				if(intervals)frequency = intervals[intervalsIndex++]; //If intervals supplied
 				currTimer = setTimeout(conditionTest, frequency);
-				allTimers[currTimer] = 0; //Only need currTimer ID
+				allTimers[currTimer] = 1; //Only need currTimer ID
 				dur += frequency;
 				//console.log("trying...", dur); //Debug
 			}
@@ -76,7 +76,8 @@
 
 		//Run first test
 		//Timer ensures that returned object exists within callback
-		setTimeout(conditionTest, 0);
+		currTimer = setTimeout(conditionTest, 0);
+		allTimers[currTimer] = 1; //Only need id
 
 		//Set API on return object
 		return {
@@ -100,5 +101,6 @@
 
 	//Add to namespace
 	(namespace || window).poll = poll;
+
 
 })(window);
