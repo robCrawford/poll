@@ -1,4 +1,3 @@
-/*global module:false*/
 module.exports = function(grunt) {
 
   // Project configuration.
@@ -12,14 +11,10 @@ module.exports = function(grunt) {
       '* Copyright (c) <%= grunt.template.today("yyyy") %> ' +
       'Rob Crawford; Licensed MIT */\n',
     // Task configuration.
-    concat: {
+    jasmine: {
+      src: 'src/*.js',
       options: {
-        banner: '<%= banner %>',
-        stripBanners: true
-      },
-      dist: {
-        src: ['src/poll.js'],
-        dest: 'dist/poll.js'
+        specs: 'test/specs/*Spec.js'
       }
     },
     uglify: {
@@ -27,45 +22,17 @@ module.exports = function(grunt) {
         banner: '<%= banner %>'
       },
       dist: {
-        src: '<%= concat.dist.dest %>',
+        src: 'src/poll.js',
         dest: 'dist/poll.min.js'
-      }
-    },
-    jshint: {
-      options: {
-        curly: true,
-        eqeqeq: true,
-        immed: true,
-        latedef: true,
-        newcap: true,
-        noarg: true,
-        sub: true,
-        undef: true,
-        unused: true,
-        boss: true,
-        eqnull: true,
-        globals: {}
-      },
-      gruntfile: {
-        src: 'Gruntfile.js'
-      }
-    },
-    jasmine: {
-      src: 'src/*.js',
-      options: {
-        specs: 'test/specs/*Spec.js'
       }
     }
   });
 
-  // These plugins provide necessary tasks.
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
+  // Plugins.
   grunt.loadNpmTasks('grunt-contrib-jasmine');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'jasmine', 'concat', 'uglify']);
+  grunt.registerTask('default', ['jasmine', 'uglify']);
 
 };

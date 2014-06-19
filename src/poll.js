@@ -35,7 +35,7 @@
 
 		function conditionTest(){
 			clearTimer(currTimer); //To remove allTimers entry
-			if(testFn()){ //If testFn evaluates
+			if(testFn(dur)){ //If testFn evaluates
 				resolveReady();
 			}
 			else if(isResolved){ //If already resolved i.e. by testFn() call above

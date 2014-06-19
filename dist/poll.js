@@ -1,4 +1,4 @@
-/*! poll.js - v0.1.0 - 2014-04-11
+/*! poll.js - v0.1.0 - 2014-06-19
 * Copyright (c) 2014 Rob Crawford; Licensed MIT */
 (function(window, namespace){
 //If an object is supplied as the second argument to the wrapping iife then `.poll()` will be attached to that namespace.  
@@ -37,7 +37,7 @@
 
 		function conditionTest(){
 			clearTimer(currTimer); //To remove allTimers entry
-			if(testFn()){ //If testFn evaluates
+			if(testFn(dur)){ //If testFn evaluates
 				resolveReady();
 			}
 			else if(isResolved){ //If already resolved i.e. by testFn() call above

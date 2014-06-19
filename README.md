@@ -11,6 +11,7 @@ The state can be set manually at any time via the returned object i.e. `cssTest.
 
 The function object supplied to the param `test` also has the methods `.ready()` and `.quit()` attached.  
 This is useful for stopping polling from within that function, i.e. when defined in a different scope.  
+The `test` function receives one argument, the total polling duration so far in milliseconds.  
 
 Test frequency can be uniform or a set of durations, see examples below.  
 
@@ -29,7 +30,8 @@ Test frequency can be uniform or a set of durations, see examples below.
 
 //EXAMPLE 1 - frequency and timeout specified:
 	var cssTest = poll({
-		test: function(){
+		test: function(dur){
+			console.log( 'test: '+dur );
 			return testDiv.offsetWidth === 10;
 		},
 		ready: function(){
@@ -44,7 +46,8 @@ Test frequency can be uniform or a set of durations, see examples below.
 
 //EXAMPLE 2 - staggered durations supplied:
 	var cssTest = poll({
-		test: function(){
+		test: function(dur){
+			console.log( 'test: '+dur );
 			return testDiv.offsetWidth === 10;
 		},
 		ready: function(){
