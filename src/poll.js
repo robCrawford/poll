@@ -6,7 +6,7 @@
 		(browserNS || root).poll = factory();
 	}
 })(this, function(){
-
+	"use strict"
 	var allTimers = {},
 		isDisabled;
 
