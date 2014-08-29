@@ -1,12 +1,14 @@
-(function(window, namespace){
-//If an object is supplied as the second argument to the wrapping iife then `.poll()` will be attached to that namespace.  
-//If no namespace is provided then `.poll()` will be added to `window`.
-	"use strict";
+(function(root, factory, browserNS){
+	if(typeof exports === 'object'){
+		module.exports = factory();
+	}
+	else{
+		(browserNS || root).poll = factory();
+	}
+})(this, function(){
+
 	var allTimers = {},
 		isDisabled;
-
-	//Add to namespace
-	(namespace || window).poll = poll;
 
 	//Defaults - can be overridden from global ref i.e. `poll.timeout = 1000`
 	poll.frequency = 250;
@@ -97,5 +99,7 @@
 		delete allTimers[id];
 	}
 
+	return poll;
 
-})(window);
+//Browser namespace for `.poll()` can be supplied as the third argument
+} /* , myLib */);
