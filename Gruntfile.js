@@ -11,6 +11,16 @@ module.exports = function(grunt) {
       '* Copyright (c) <%= grunt.template.today("yyyy") %> ' +
       'Rob Crawford; Licensed MIT */\n',
     // Task configuration.
+    concat: {
+      options: {
+        banner: '<%= banner %>',
+        stripBanners: true
+      },
+      dist: {
+        src: ['src/poll.js'],
+        dest: 'dist/poll.js'
+      }
+    },
     jasmine: {
       src: 'src/*.js',
       options: {
@@ -29,10 +39,11 @@ module.exports = function(grunt) {
   });
 
   // Plugins.
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
   // Default task.
-  grunt.registerTask('default', ['jasmine', 'uglify']);
+  grunt.registerTask('default', ['jasmine', 'concat', 'uglify']);
 
 };
