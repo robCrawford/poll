@@ -3,10 +3,40 @@ poll.js
 
 *(No dependencies, 0.7kB minified)*  
 
-A javascript polling utility.  
+A javascript polling utility for IE8+ and node.  
 Runs `test` every `frequency` until it either returns a truthy value `ready()`, or `timeout` is reached `quit()`.  
 The state can also be set manually at any time,  `myTest.ready()` or `myTest.quit()`.  
 
+Examples
+--------
+```javascript
+
+//Minimum required
+poll({
+	test: function(){
+		return testDiv.offsetWidth === 10;
+	},
+	ready: function(){
+		console.log( 'CSS loaded' );
+	}
+});
+
+//Example features
+var myTest = poll({
+	test: function(dur){
+		console.log( 'test: '+dur );
+		return testDiv.offsetWidth === 10;
+	},
+	ready: function(){
+		console.log( 'CSS loaded' );
+	},
+	quit: function(){
+		console.log( 'Error - CSS did not load' ); 
+	},
+	frequency: 100, //How often to poll in ms (default: 250)
+	timeout: 10000 //ms until quit (default: 30000)
+});
+```
 
 Params
 ------
@@ -29,37 +59,6 @@ This overrides `frequency` if both are supplied.
 
 - `timeout`  
 Total time in ms after which `quit` will be called.
-
-Examples
---------
-```javascript
-
-//Minimum required
-poll({
-	test: function(){
-		return testDiv.offsetWidth === 10;
-	},
-	ready: function(){
-		console.log( 'CSS loaded' );
-	}
-});
-
-//Frequency and timeout specified:
-var myTest = poll({
-	test: function(dur){
-		console.log( 'test: '+dur );
-		return testDiv.offsetWidth === 10;
-	},
-	ready: function(){
-		console.log( 'CSS loaded' );
-	},
-	quit: function(){
-		console.log( 'Error - CSS did not load' ); 
-	},
-	frequency: 100, //How often to poll in ms (default: 250)
-	timeout: 10000 //ms until quit (default: 30000)
-});
-```
 
 Notes
 -----
@@ -105,5 +104,7 @@ Notes
 	})();
 	```
 
-- In a browser environment the namespace for `.poll()` can be supplied as the third argument to the wrapping iife.  
-i.e. `}, myLib.util);` will result in `myLib.util.poll`.  
+- In a browser environment the namespace for `.poll()` can be supplied as the third argument to the wrapping iife, i.e.  
+`}, myLib.util);`  
+will result in  
+`myLib.util.poll`
